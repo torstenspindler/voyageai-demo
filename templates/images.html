@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Image Search w/ VoyageAI</title>
+</head>
+<body>
+  <div class="container">
+    <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="center-image">
+    <h1>Image Search</h1>
+    <!-- Botón de regreso -->
+    <div class="nav-button">
+      <a href="{{ url_for('index') }}"><button type="button">Volver al Buscador</button></a>
+    </div>
+    <form action="/upload_image" method="post" enctype="multipart/form-data">
+      <div class="input-group">
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Document Search</title>
+</head>
+<body>
+  <div class="container">
+    <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="center-image">
+    <h1>Document Search</h1>
+    <div class="nav-button">
+      <a href="{{ url_for('about') }}"><button type="button">Image recognition</button></a>
+    </div>
+    <form action="/search" method="post">
+      <div class="input-group">
+        <input type="text" id="description" name="description" placeholder="Enter description">
+        <button type="submit">Submit</button>
+      </div>
+      <div class="checkbox-group">
+        <label><input type="radio" name="api_selection" value="voyageai" checked> VoyageAI</label>
+        <label><input type="radio" name="api_selection" value="voyageai_reranking"> VoyageAI+Reranking</label>
+        <label><input type="radio" name="api_selection" value="openai"> OpenAI</label>
+        <label><input type="checkbox" name="rag" value="true"> RAG</label>
+    </div>
+    </form>
+  </div>
+</body>
+</html>
