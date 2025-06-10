@@ -4,7 +4,12 @@ This document describes the needed database setup
 
 ## Restore Database dump
 
-The Database directory contains a dump for the mercadona database which is needed.
+The Database directory contains the files from the dump for the mercadona database which is needed.
+
+### Download dumps
+
+- [mercasmart.gz](https://github.com/josmanperez/voyageai-demo/releases/tag/v1.0.0)  
+
 During mongorestore we need to rename this database to mercasmart (--nsFrom, --nsTo arguments).
 
 Example for restoring from dump directory into a mongod running on localhost without authentication:
