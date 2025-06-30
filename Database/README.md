@@ -8,24 +8,25 @@ The Database directory contains the files from the dump for the mercadona databa
 
 ### Download dumps
 
-- [mercasmart.gz](https://github.com/josmanperez/voyageai-demo/releases/tag/v1.0.0)  
+- [mercasmsart.dump](https://localhost/mercassmart.dump)
 
-During mongorestore we need to rename this database to mercasmart (--nsFrom, --nsTo arguments).
+The file is gzipped archive of the database and can be restored for example to localhost via:
 
-Example for restoring from dump directory into a mongod running on localhost without authentication:
+`mongorestore --drop --gzip --archive=mercasmart.dump`
 
-`mongorestore --gzip --nsFrom mercadona.\* --nsTo mercasmart.\*`
+You can find the proper URL to use for your Atlas cluster from the Atlas Tools dialog.
 
 ## Index Definitions needed
 
-Three indices for Vector Search on mercasmart.Products are needed:
+Three indices for Vector Search on *mercasmart.Products* are needed:
 
 They can easily be defined via the Atlas Search Index Web UI.
 
-vo_vector_index and vo_image_index are needed for VoyageAI
-vector_index is needed for openAI
+**vo_vector_index** and **vo_image_index** are needed for VoyageAI
+**vector_index** is needed for openAI
 
 vo_vector_index:
+
 ```json
 {
     "fields": [
@@ -40,6 +41,7 @@ vo_vector_index:
 ```
 
 vo_image_index:
+
 ```json
 {
   "fields": [
@@ -54,6 +56,7 @@ vo_image_index:
 ```
 
 vector_index:
+
 ```json
 {
   "fields": [

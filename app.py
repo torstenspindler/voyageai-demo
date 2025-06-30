@@ -5,6 +5,7 @@ from pymongo.server_api import ServerApi
 import certifi
 import voyageai
 from openai import OpenAI
+from openai import AzureOpenAI
 from PIL import Image
 import markdown
 import os
@@ -12,10 +13,26 @@ import os
 # Load environment variables from .env file
 load_dotenv(override=True)
 
-# Set up VoyageAI API Key
-vo = voyageai.Client(api_key=os.environ["VOYAGE_API_KEY"])
-# Set up OpenAI API Key
-client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
+if os.environ.get("VOYAGE_API_KEY") != None:
+  # Set up VoyageAI API Key
+  vo = voyageai.Client(api_key=os.environ["VOYAGE_API_KEY"])
+else:
+  raise ValueError("No VoyageAI API key found in environment variables.")
+
+# Decide if using OpenAI or Azure OpenAI
+if os.environ.get("OPENAI_API_KEY") != None:
+  # Set up OpenAI API Key and client
+  client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
+elif os.environ.get("AZURE_OPENAI_API_KEY") != None and \
+     os.environ.get("AZURE_OPENAI_ENDPOINT") != None:
+  # Set up Azure OpenAI API Key, Azure OpenAI Endpoint and client
+  client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),  
+      api_version="2024-07-01-preview",
+      azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+  )
+else:
+  raise ValueError("No OpenAI or Azure OpenAI API key or Azure OpenAI Endpoint found in environment variables.")
 
 # Set up MongoDB client
 try: 
@@ -48,7 +65,7 @@ def about():
 def search():
   query = request.form['description']
   api_selection = request.form['api_selection']
-  print(request.form.get("rag"))
+  print("RAG", request.form.get("rag"))
   is_rag = request.form.get('rag') == 'true'
   if api_selection == "openai":
     response =  client.embeddings.create(
@@ -66,7 +83,7 @@ def search():
     )
     embedding = response.embeddings[0]
     
-  print(embedding)
+  # print(embedding)
   # Determine the path based on the API selection
   path = "vo_vector_index" if (api_selection == "voyageai" or api_selection == "voyageai_reranking") else "vector_index"
   embedding_field = "vo_embedding" if (api_selection == "voyageai" or api_selection == "voyageai_reranking") else "embedding"
@@ -125,7 +142,7 @@ def search():
     context = "\n\n".join([f"{doc['display_name']} - {doc['details']['description']}" for doc in results])
     prompt = f"Using the following ingredients, providing nutrition valuable information and one recipe with those as well as the price in euros:\n{context}\nanswer the query: {query}"
     gpt_response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-35-turbo",
         messages=[
           {"role": "system", "content": "You are a helpful expert nutrition and chef assistant."},
           {"role": "user", "content": prompt},
@@ -175,8 +192,6 @@ def upload_image():
     ]
     results = list(collection.aggregate(pipeline))
     return render_template('results.html', results=results)
-
-
-
+  
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0", port=9080)
