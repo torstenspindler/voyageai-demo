@@ -8,7 +8,7 @@ The Database directory contains the files from the dump for the mercadona databa
 
 ### Download dumps
 
-- [mercasmsart.dump](https://localhost/mercassmart.dump)
+- [mercasmsart.dump](https://github.com/torstenspindler/voyageai-demo/releases/download/v1.0.0/mercasmart.dump)
 
 The file is gzipped archive of the database and can be restored for example to localhost via:
 
